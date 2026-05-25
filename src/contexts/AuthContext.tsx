@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
 
+import { getDashboardPath } from "../lib/auth";
 import { t } from "../lib/i18n";
 import { api, apiBaseUrl, authStorageKey } from "../services/api";
 import type { Role, UserSession } from "../types";
@@ -37,6 +38,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
             window.localStorage.setItem(authStorageKey, JSON.stringify(response.data.user));
             window.localStorage.setItem("karyabi-token", response.data.token);
             setSessionState(response.data.user);
+            window.location.assign(getDashboardPath(response.data.user.role));
             return;
           }
 

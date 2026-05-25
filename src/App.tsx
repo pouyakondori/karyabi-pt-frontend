@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { LayoutWrapper } from "./components/LayoutWrapper";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -13,9 +13,10 @@ function App() {
     <LayoutWrapper>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/auth/callback" element={<AuthCallbackPage />} />
+        <Route path="/dashboard" element={<AuthCallbackPage />} />
+        <Route path="/auth/callback" element={<Navigate replace to="/dashboard" />} />
         <Route
-          path="/seeker"
+          path="/dashboard/seeker"
           element={
             <ProtectedRoute roles={["job_seeker"]}>
               <JobSeekerDashboard />
@@ -23,7 +24,7 @@ function App() {
           }
         />
         <Route
-          path="/employer"
+          path="/dashboard/employer"
           element={
             <ProtectedRoute roles={["employer"]}>
               <EmployerDashboard />
@@ -31,13 +32,16 @@ function App() {
           }
         />
         <Route
-          path="/admin"
+          path="/dashboard/admin"
           element={
             <ProtectedRoute roles={["admin"]}>
               <AdminDashboard />
             </ProtectedRoute>
           }
         />
+        <Route path="/seeker" element={<Navigate replace to="/dashboard/seeker" />} />
+        <Route path="/employer" element={<Navigate replace to="/dashboard/employer" />} />
+        <Route path="/admin" element={<Navigate replace to="/dashboard/admin" />} />
       </Routes>
     </LayoutWrapper>
   );

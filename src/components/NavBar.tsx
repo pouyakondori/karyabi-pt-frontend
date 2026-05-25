@@ -16,13 +16,13 @@ export function NavBar() {
           <Link className="rounded-full px-3 py-2 hover:bg-slate-100" to="/">
             {t("nav.home")}
           </Link>
-          <Link className="rounded-full px-3 py-2 hover:bg-slate-100" to="/seeker">
+          <Link className="rounded-full px-3 py-2 hover:bg-slate-100" to="/dashboard/seeker">
             {t("nav.seeker")}
           </Link>
-          <Link className="rounded-full px-3 py-2 hover:bg-slate-100" to="/employer">
+          <Link className="rounded-full px-3 py-2 hover:bg-slate-100" to="/dashboard/employer">
             {t("nav.employer")}
           </Link>
-          <Link className="rounded-full px-3 py-2 hover:bg-slate-100" to="/admin">
+          <Link className="rounded-full px-3 py-2 hover:bg-slate-100" to="/dashboard/admin">
             {t("nav.admin")}
           </Link>
           {session ? (
