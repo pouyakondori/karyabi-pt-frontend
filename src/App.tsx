@@ -7,12 +7,14 @@ import { JobSeekerDashboard } from "./pages/JobSeekerDashboard";
 import { EmployerDashboard } from "./pages/EmployerDashboard";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AuthCallbackPage } from "./pages/AuthCallbackPage";
+import { LoginPage } from "./pages/LoginPage";
 
 function App() {
   return (
     <LayoutWrapper>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<AuthCallbackPage />} />
         <Route path="/auth/callback" element={<Navigate replace to="/dashboard" />} />
         <Route
