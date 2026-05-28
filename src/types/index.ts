@@ -99,7 +99,6 @@ export type CreateEmployerJobPayload = {
 };
 
 export type JobCandidatesPayload = {
-  id: string;
-  title: string;
+  job: Job;
   applications: CandidateApplication[];
 };

@@ -88,6 +88,10 @@ export const api = {
       body: JSON.stringify(payload)
     }),
   getCandidates: async (jobId: string) => request<JobCandidatesPayload>(`/employer/jobs/${jobId}/candidates`),
+  deleteEmployerJob: async (jobId: string) =>
+    request<null>(`/employer/jobs/${jobId}`, {
+      method: "DELETE"
+    }),
   getPendingJobs: async () => request<Job[]>("/admin/jobs/pending"),
   updateJobStatus: async (jobId: string, status: Extract<JobStatus, "approved" | "rejected">) =>
     request<Job>(`/admin/jobs/${jobId}/status`, {

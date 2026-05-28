@@ -33,8 +33,25 @@ export function ApplicantsTracker({ jobs, candidates, selectedJobId, onSelectJob
               onClick={() => onSelectJob(job.id)}
               type="button"
             >
-              <div className="font-semibold text-slate-900">{job.title}</div>
-              <div className="mt-1 text-xs text-slate-500">{job.companyName ?? t("employer.companyFallback")}</div>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="font-semibold text-slate-900">{job.title}</div>
+                  <div className="mt-1 text-xs text-slate-500">{job.companyName ?? t("employer.companyFallback")}</div>
+                </div>
+                {job.status ? (
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                      job.status === "pending"
+                        ? "bg-amber-50 text-amber-700"
+                        : job.status === "approved"
+                          ? "bg-emerald-50 text-emerald-700"
+                          : "bg-rose-50 text-rose-700"
+                    }`}
+                  >
+                    {t(`labels.${job.status}`)}
+                  </span>
+                ) : null}
+              </div>
               <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500">
                 {job.location ? <span className="rounded-full bg-white/80 px-2 py-1">{job.location}</span> : null}
                 {salary ? <span className="rounded-full bg-white/80 px-2 py-1">{salary}</span> : null}
