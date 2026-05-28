@@ -1,6 +1,8 @@
 export type Role = "admin" | "job_seeker" | "employer";
 export type JobType = "full-time" | "part-time";
 export type JobStatus = "pending" | "approved" | "rejected";
+export type WorkplaceType = "on_site" | "hybrid" | "remote";
+export type ExperienceLevel = "entry" | "mid" | "senior";
 export type PortugalRegion =
   | "aveiro"
   | "beja"
@@ -38,6 +40,14 @@ export type Job = {
   id: string;
   title: string;
   description: string;
+  companyName?: string | null;
+  location?: string | null;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  workplaceType?: WorkplaceType | null;
+  experienceLevel?: ExperienceLevel | null;
+  vacancies?: number | null;
+  applicationDeadline?: string | null;
   type: JobType;
   status?: JobStatus;
   createdAt: string;
@@ -72,6 +82,20 @@ export type CandidateApplication = {
     email: string;
     seekerProfile?: JobSeekerProfile;
   };
+};
+
+export type CreateEmployerJobPayload = {
+  title: string;
+  description: string;
+  companyName: string;
+  location: string;
+  salaryMin: number;
+  salaryMax: number;
+  workplaceType: WorkplaceType;
+  experienceLevel: ExperienceLevel;
+  vacancies: number;
+  applicationDeadline?: string;
+  type: JobType;
 };
 
 export type JobCandidatesPayload = {

@@ -1,4 +1,12 @@
-import type { AuthLoginPayload, Job, JobCandidatesPayload, JobSeekerProfile, JobStatus, UserSession } from "../types";
+import type {
+  AuthLoginPayload,
+  CreateEmployerJobPayload,
+  Job,
+  JobCandidatesPayload,
+  JobSeekerProfile,
+  JobStatus,
+  UserSession
+} from "../types";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000/api";
 const gdprStorageKey = "karyabi-gdpr-consent";
@@ -74,7 +82,7 @@ export const api = {
     }),
   getRecommendedJobs: async () => request<Job[]>("/seeker/recommended-jobs"),
   getEmployerJobs: async () => request<Job[]>("/employer/jobs"),
-  createEmployerJob: async (payload: Pick<Job, "title" | "description" | "type">) =>
+  createEmployerJob: async (payload: CreateEmployerJobPayload) =>
     request<Job>("/employer/jobs", {
       method: "POST",
       body: JSON.stringify(payload)
