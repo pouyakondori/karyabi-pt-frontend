@@ -16,11 +16,19 @@ function formatText(value?: string) {
   return value && value.trim() ? value : "—";
 }
 
-function ProfileInfoItem({ label, value }: { label: string; value: string }) {
+function ProfileInfoItem({ label, value, href }: { label: string; value: string; href?: string }) {
   return (
     <div className="rounded-2xl bg-slate-50 p-4">
       <div className="text-xs font-semibold text-slate-500">{label}</div>
-      <div className="mt-2 text-sm font-semibold leading-7 text-slate-900">{value}</div>
+      <div className="mt-2 text-sm font-semibold leading-7 text-slate-900">
+        {href ? (
+          <a className="text-emerald-700 underline decoration-emerald-300 underline-offset-4" href={href} rel="noreferrer" target="_blank">
+            {value}
+          </a>
+        ) : (
+          value
+        )}
+      </div>
     </div>
   );
 }
@@ -108,8 +116,12 @@ export function JobSeekerProfilePage() {
               <ProfileInfoItem label={t("form.residencyPermitType")} value={formatText(profile?.residencyPermitType)} />
               <ProfileInfoItem label={t("form.residencyExpirationDate")} value={formatText(profile?.residencyExpirationDate)} />
               <ProfileInfoItem label={t("form.universityFieldAndDegree")} value={formatText(profile?.universityFieldAndDegree)} />
-              <ProfileInfoItem label={t("form.resumeUrl")} value={formatText(profile?.resumeUrl)} />
-              <ProfileInfoItem label={t("form.linkedinUrl")} value={formatText(profile?.linkedinUrl)} />
+              <ProfileInfoItem label={t("form.resumeUrl")} value={formatText(profile?.resumeUrl)} href={profile?.resumeUrl || undefined} />
+              <ProfileInfoItem
+                label={t("form.linkedinUrl")}
+                value={formatText(profile?.linkedinUrl)}
+                href={profile?.linkedinUrl || undefined}
+              />
             </div>
           </SectionCard>
 

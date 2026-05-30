@@ -112,3 +112,8 @@ export type EmployerCandidateDetailPayload = {
   job: Job;
   application: CandidateApplication;
 };
+
+export type ResumeUploadPayload = {
+  url: string;
+  fileName: string;
+};

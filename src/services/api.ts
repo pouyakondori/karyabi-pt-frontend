@@ -6,6 +6,7 @@ import type {
   JobCandidatesPayload,
   JobSeekerProfile,
   JobStatus,
+  ResumeUploadPayload,
   UserSession
 } from "../types";
 
@@ -45,7 +46,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<ApiResponse
     headers.set("x-gdpr-consent", "true");
   }
 
-  headers.set("Content-Type", "application/json");
+  if (!(init?.body instanceof FormData)) {
+    headers.set("Content-Type", "application/json");
+  }
 
   if (session?.userId) {
     const token = window.localStorage.getItem("karyabi-token");
@@ -81,6 +84,15 @@ export const api = {
       method: "POST",
       body: JSON.stringify(payload)
     }),
+  uploadSeekerResume: async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return request<ResumeUploadPayload>("/seeker/profile/resume", {
+      method: "POST",
+      body: formData
+    });
+  },
   getRecommendedJobs: async () => request<Job[]>("/seeker/recommended-jobs"),
   getEmployerJobs: async () => request<Job[]>("/employer/jobs"),
   createEmployerJob: async (payload: CreateEmployerJobPayload) =>
