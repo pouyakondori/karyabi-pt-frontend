@@ -11,6 +11,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { CreateJobOfficePage } from "./pages/CreateJobOfficePage";
 import { EmployerJobOfferPage } from "./pages/EmployerJobOfferPage";
 import { EmployerCandidatePage } from "./pages/EmployerCandidatePage";
+import { JobSeekerProfilePage } from "./pages/JobSeekerProfilePage";
 
 function App() {
   return (
@@ -33,6 +34,14 @@ function App() {
           element={
             <ProtectedRoute roles={["job_seeker"]}>
               <JobSeekerDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/job-seeker/profile"
+          element={
+            <ProtectedRoute roles={["job_seeker"]}>
+              <JobSeekerProfilePage />
             </ProtectedRoute>
           }
         />
