@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 import { useGDPR } from "../contexts/GDPRContext";
@@ -20,6 +20,8 @@ type LoginOption = {
 export function LoginPage() {
   const { session, signIn, isDevAuthMode } = useAuth();
   const { hasConsent } = useGDPR();
+  const [searchParams] = useSearchParams();
+  const loginError = searchParams.get("error");
 
   if (session) {
     return <Navigate replace to={getDashboardPath(session.role)} />;
@@ -48,9 +50,7 @@ export function LoginPage() {
       description: t("login.adminDescription"),
       accentClassName: "from-amber-500/20 to-orange-500/5",
       buttonClassName: "bg-amber-500 hover:bg-amber-600",
-      badge: t(isDevAuthMode ? "login.devModeBadge" : "login.adminLimitedBadge"),
-      disabled: !isDevAuthMode,
-      disabledLabel: t("login.adminDisabled")
+      badge: t(isDevAuthMode ? "login.devModeBadge" : "login.googleModeBadge")
     }
   ];
 
@@ -77,6 +77,12 @@ export function LoginPage() {
           </div>
         </div>
       </section>
+
+      {loginError ? (
+        <section className="rounded-[2rem] border border-rose-200 bg-rose-50 p-5 text-sm font-medium text-rose-700 shadow-sm">
+          {loginError}
+        </section>
+      ) : null}
 
       <section className="grid gap-5 lg:grid-cols-3">
         {options.map((option) => {

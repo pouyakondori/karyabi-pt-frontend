@@ -119,6 +119,13 @@ export type ResumeUploadPayload = {
   fileName: string;
 };
 
+export type AdminSummary = {
+  id: string;
+  email: string;
+  isSuspended: boolean;
+  createdAt: string;
+};
+
 export type AdminEmployerSummary = {
   id: string;
   email: string;
@@ -144,6 +151,7 @@ export type AdminJobSeekerSummary = {
 };
 
 export type AdminOverviewPayload = {
+  admins: AdminSummary[];
   employers: AdminEmployerSummary[];
   jobSeekers: AdminJobSeekerSummary[];
   jobs: Job[];

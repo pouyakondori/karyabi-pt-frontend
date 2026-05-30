@@ -180,6 +180,11 @@ export const api = {
       method: "DELETE"
     }),
   getAdminOverview: async () => request<AdminOverviewPayload>("/admin/overview"),
+  createAdminUser: async (email: string) =>
+    request("/admin/admins", {
+      method: "POST",
+      body: JSON.stringify({ email })
+    }),
   getPendingJobs: async () => request<Job[]>("/admin/jobs/pending"),
   updateJobStatus: async (jobId: string, status: Extract<JobStatus, "approved" | "rejected">) =>
     request<Job>(`/admin/jobs/${jobId}/status`, {

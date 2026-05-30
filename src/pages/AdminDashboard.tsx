@@ -4,12 +4,10 @@ import { SectionCard } from "../components/SectionCard";
 import { useGDPR } from "../contexts/GDPRContext";
 import { t } from "../lib/i18n";
 import { api } from "../services/api";
-import type { AdminEmployerSummary, AdminJobSeekerSummary, Job } from "../types";
+import type { AdminEmployerSummary, AdminJobSeekerSummary, AdminSummary, Job } from "../types";
 
 function statusChip(isSuspended?: boolean) {
-  return isSuspended
-    ? "bg-amber-50 text-amber-700"
-    : "bg-emerald-50 text-emerald-700";
+  return isSuspended ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700";
 }
 
 function formatDate(value: string) {
@@ -38,14 +36,18 @@ function JobStatusChip({ job }: { job: Job }) {
 
 export function AdminDashboard() {
   const { hasConsent } = useGDPR();
+  const [admins, setAdmins] = useState<AdminSummary[]>([]);
   const [employers, setEmployers] = useState<AdminEmployerSummary[]>([]);
   const [jobSeekers, setJobSeekers] = useState<AdminJobSeekerSummary[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [submittingAdmin, setSubmittingAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadOverview = async () => {
     setLoading(true);
-    const response = await api.getAdminOverview().catch(() => ({ data: { employers: [], jobSeekers: [], jobs: [] } }));
+    const response = await api.getAdminOverview().catch(() => ({ data: { admins: [], employers: [], jobSeekers: [], jobs: [] } }));
+    setAdmins(response.data.admins);
     setEmployers(response.data.employers);
     setJobSeekers(response.data.jobSeekers);
     setJobs(response.data.jobs);
@@ -68,6 +70,54 @@ export function AdminDashboard() {
           <p className="text-sm leading-7 text-slate-600">{t("admin.dashboardDescription")}</p>
         </div>
       </section>
+
+      <SectionCard title={t("admin.adminsTitle")}>
+        <div className="space-y-6">
+          <div className="grid gap-4 md:grid-cols-[1fr_auto]">
+            <input
+              className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500"
+              placeholder={t("admin.addAdminPlaceholder")}
+              value={newAdminEmail}
+              onChange={(event) => setNewAdminEmail(event.target.value)}
+            />
+            <button
+              className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:bg-slate-300"
+              disabled={submittingAdmin || !newAdminEmail.trim()}
+              onClick={async () => {
+                setSubmittingAdmin(true);
+
+                try {
+                  await api.createAdminUser(newAdminEmail.trim());
+                  setNewAdminEmail("");
+                  await loadOverview();
+                } finally {
+                  setSubmittingAdmin(false);
+                }
+              }}
+              type="button"
+            >
+              {submittingAdmin ? t("common.loading") : t("admin.addAdmin")}
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {admins.length === 0 ? <div className="text-sm text-slate-500">{t("admin.emptyAdmins")}</div> : null}
+            {admins.map((admin) => (
+              <div key={admin.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-bold text-slate-900">{admin.email}</div>
+                    <div className="mt-1 text-xs text-slate-500">{t("admin.createdAt")}: {formatDate(admin.createdAt)}</div>
+                  </div>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusChip(admin.isSuspended)}`}>
+                    {admin.isSuspended ? t("labels.suspended") : t("labels.active")}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </SectionCard>
 
       {loading ? <SectionCard title={t("common.loading")} /> : null}
 
@@ -167,7 +217,7 @@ export function AdminDashboard() {
                     <div>
                       <div className="font-bold text-slate-900">{job.title}</div>
                       <div className="mt-1 text-xs text-slate-500">{job.companyName ?? t("employer.companyFallback")}</div>
-                      <div className="mt-2 text-xs leading-6 text-slate-500 line-clamp-3">{job.description}</div>
+                      <div className="mt-2 line-clamp-3 text-xs leading-6 text-slate-500">{job.description}</div>
                     </div>
                     <JobStatusChip job={job} />
                   </div>
