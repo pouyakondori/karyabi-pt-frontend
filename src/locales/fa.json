@@ -4,6 +4,8 @@
   },
   "nav": {
     "login": "ورود",
+    "dashboard": "ورود به داشبورد",
+    "yourRole": "نقش شما:",
     "logout": "خروج"
   },
   "gdpr": {
@@ -178,6 +180,11 @@
     "vacancies": "ظرفیت",
     "applicationDeadline": "مهلت درخواست",
     "rejectionReason": "دلیل رد"
+  },
+  "roles": {
+    "admin": "مدیر",
+    "job_seeker": "کارجو",
+    "employer": "کارفرما"
   },
   "workplaceTypes": {
     "on_site": "حضوری",
