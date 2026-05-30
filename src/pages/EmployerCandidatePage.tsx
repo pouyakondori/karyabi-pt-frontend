@@ -333,7 +333,7 @@ export function EmployerCandidatePage() {
         <Modal
           cancelLabel={t("common.cancel")}
           confirmLabel={submitting ? t("common.loading") : t("employer.acceptCandidate")}
-          description={`${t("employer.acceptModalDescription")}\n${t("employer.acceptModalSecondary")}`}
+          description={t("employer.acceptModalDescription")}
           disabled={submitting}
           title={t("employer.acceptModalTitle")}
           onClose={() => setActiveModal(null)}

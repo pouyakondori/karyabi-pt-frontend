@@ -40,7 +40,7 @@ export function EmployerDashboard() {
           </div>
           <Link
             className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-700"
-            to="/create-job-offer"
+            to="/dashboard/employer/create-job-offer"
           >
             {t("employer.postTitle")}
           </Link>

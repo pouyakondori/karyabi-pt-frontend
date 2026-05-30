@@ -21,7 +21,7 @@ function App() {
         <Route path="/dashboard" element={<AuthCallbackPage />} />
         <Route path="/auth/callback" element={<Navigate replace to="/dashboard" />} />
         <Route
-          path="/create-job-offer"
+          path="/dashboard/employer/create-job-offer"
           element={
             <ProtectedRoute roles={["employer"]}>
               <CreateJobOfficePage />
@@ -29,7 +29,7 @@ function App() {
           }
         />
         <Route
-          path="/dashboard/seeker"
+          path="/dashboard/job-seeker"
           element={
             <ProtectedRoute roles={["job_seeker"]}>
               <JobSeekerDashboard />
@@ -68,9 +68,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/seeker" element={<Navigate replace to="/dashboard/seeker" />} />
-        <Route path="/employer" element={<Navigate replace to="/dashboard/employer" />} />
-        <Route path="/admin" element={<Navigate replace to="/dashboard/admin" />} />
       </Routes>
     </LayoutWrapper>
   );
