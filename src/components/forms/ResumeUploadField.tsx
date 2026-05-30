@@ -11,6 +11,7 @@ type ResumeUploadFieldProps = {
 export function ResumeUploadField({ value, onChange }: ResumeUploadFieldProps) {
   const [fileName, setFileName] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [opening, setOpening] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   return (
@@ -51,9 +52,24 @@ export function ResumeUploadField({ value, onChange }: ResumeUploadFieldProps) {
       {uploading ? <div className="text-xs text-slate-500">{t("form.resumeUploading")}</div> : null}
       {fileName ? <div className="text-xs text-emerald-700">{t("form.resumeUploaded")}: {fileName}</div> : null}
       {value ? (
-        <a className="inline-flex text-sm font-medium text-emerald-700 underline underline-offset-4" href={value} rel="noreferrer" target="_blank">
-          {t("form.resumeDownload")}
-        </a>
+        <button
+          className="inline-flex w-fit text-sm font-medium text-emerald-700 underline underline-offset-4"
+          disabled={opening}
+          onClick={() => {
+            setError(null);
+            setOpening(true);
+
+            void api
+              .openProtectedFile(value)
+              .catch((openError) => {
+                setError(openError instanceof Error ? openError.message : t("common.retry"));
+              })
+              .finally(() => setOpening(false));
+          }}
+          type="button"
+        >
+          {opening ? t("common.loading") : t("form.resumeDownload")}
+        </button>
       ) : null}
       {error ? <div className="text-xs text-rose-600">{error}</div> : null}
     </div>

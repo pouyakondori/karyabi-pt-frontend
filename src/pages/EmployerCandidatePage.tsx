@@ -107,6 +107,8 @@ export function EmployerCandidatePage() {
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const [rejectionReason, setRejectionReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [resumeLoading, setResumeLoading] = useState(false);
+  const [resumeError, setResumeError] = useState<string | null>(null);
   const [reasonError, setReasonError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -315,9 +317,24 @@ export function EmployerCandidatePage() {
           {(profile?.resumeUrl || profile?.linkedinUrl) ? (
             <div className="mt-4 flex flex-wrap gap-3">
               {profile?.resumeUrl ? (
-                <a className="rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white" href={profile.resumeUrl} rel="noreferrer" target="_blank">
-                  {t("form.resumeUpload")}
-                </a>
+                <button
+                  className="rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+                  disabled={resumeLoading}
+                  onClick={() => {
+                    setResumeError(null);
+                    setResumeLoading(true);
+
+                    void api
+                      .openProtectedFile(profile.resumeUrl!)
+                      .catch((error) => {
+                        setResumeError(error instanceof Error ? error.message : t("common.retry"));
+                      })
+                      .finally(() => setResumeLoading(false));
+                  }}
+                  type="button"
+                >
+                  {resumeLoading ? t("common.loading") : t("form.resumeDownload")}
+                </button>
               ) : null}
               {profile?.linkedinUrl ? (
                 <a className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700" href={profile.linkedinUrl} rel="noreferrer" target="_blank">
@@ -326,6 +343,7 @@ export function EmployerCandidatePage() {
               ) : null}
             </div>
           ) : null}
+          {resumeError ? <div className="mt-4 text-sm font-medium text-rose-600">{resumeError}</div> : null}
         </SectionCard>
       </div>
 

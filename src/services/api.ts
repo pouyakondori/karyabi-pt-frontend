@@ -20,6 +20,44 @@ type ApiResponse<T> = {
   data: T;
 };
 
+function getAuthHeaders(init?: HeadersInit) {
+  const session = getSession();
+  const headers = new Headers(init);
+
+  if (getConsentValue()) {
+    headers.set("x-gdpr-consent", "true");
+  }
+
+  if (session?.userId) {
+    const token = window.localStorage.getItem("karyabi-token");
+
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+  }
+
+  return headers;
+}
+
+function resolveUrl(path: string) {
+  return /^https?:\/\//i.test(path) ? path : `${apiBaseUrl}${path}`;
+}
+
+function parseFileName(contentDisposition: string | null) {
+  if (!contentDisposition) {
+    return undefined;
+  }
+
+  const utfMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+
+  if (utfMatch?.[1]) {
+    return decodeURIComponent(utfMatch[1]);
+  }
+
+  const basicMatch = contentDisposition.match(/filename="?([^";]+)"?/i);
+  return basicMatch?.[1];
+}
+
 function getConsentValue() {
   if (typeof window === "undefined") {
     return false;
@@ -39,26 +77,13 @@ function getSession(): UserSession | null {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<ApiResponse<T>> {
-  const session = getSession();
-  const headers = new Headers(init?.headers);
-
-  if (getConsentValue()) {
-    headers.set("x-gdpr-consent", "true");
-  }
+  const headers = getAuthHeaders(init?.headers);
 
   if (!(init?.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
   }
 
-  if (session?.userId) {
-    const token = window.localStorage.getItem("karyabi-token");
-
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
-  }
-
-  const response = await fetch(`${apiBaseUrl}${path}`, {
+  const response = await fetch(resolveUrl(path), {
     ...init,
     headers,
     credentials: "include"
@@ -92,6 +117,43 @@ export const api = {
       method: "POST",
       body: formData
     });
+  },
+  openProtectedFile: async (url: string) => {
+    const response = await fetch(resolveUrl(url), {
+      method: "GET",
+      headers: getAuthHeaders(),
+      credentials: "include"
+    });
+
+    if (!response.ok) {
+      const errorPayload = (await response.json().catch(() => null)) as Partial<ApiResponse<null>> | null;
+      throw new Error(errorPayload?.message ?? "request_failed");
+    }
+
+    const blob = await response.blob();
+    const objectUrl = window.URL.createObjectURL(blob);
+    const fileName = parseFileName(response.headers.get("content-disposition"));
+
+    if (blob.type === "application/pdf") {
+      const openedWindow = window.open(objectUrl, "_blank", "noopener,noreferrer");
+
+      if (!openedWindow) {
+        const anchor = document.createElement("a");
+        anchor.href = objectUrl;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        anchor.click();
+      }
+    } else {
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = fileName ?? "resume";
+      anchor.click();
+    }
+
+    window.setTimeout(() => {
+      window.URL.revokeObjectURL(objectUrl);
+    }, 60_000);
   },
   getRecommendedJobs: async () => request<Job[]>("/seeker/recommended-jobs"),
   getEmployerJobs: async () => request<Job[]>("/employer/jobs"),
