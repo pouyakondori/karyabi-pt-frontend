@@ -77,7 +77,9 @@ export function EmployerDashboard() {
                             ? "bg-amber-50 text-amber-700"
                             : job.status === "approved"
                               ? "bg-emerald-50 text-emerald-700"
-                              : "bg-rose-50 text-rose-700"
+                              : job.status === "closed"
+                                ? "bg-slate-100 text-slate-700"
+                                : "bg-rose-50 text-rose-700"
                         }`}
                       >
                         {t(`labels.${job.status}`)}

@@ -15,7 +15,7 @@ function formatSalary(job: Job) {
   return `${job.salaryMin.toLocaleString("en-US")} - ${job.salaryMax.toLocaleString("en-US")} €`;
 }
 
-function StatusBadge({ status }: { status?: Job["status"] }) {
+function StatusBadge({ status }: { status?: Job["status"] | CandidateApplication["status"] }) {
   if (!status) {
     return null;
   }
@@ -25,9 +25,11 @@ function StatusBadge({ status }: { status?: Job["status"] }) {
       className={`rounded-full px-3 py-1 text-xs font-semibold ${
         status === "pending"
           ? "bg-amber-50 text-amber-700"
-          : status === "approved"
+          : status === "approved" || status === "accepted"
             ? "bg-emerald-50 text-emerald-700"
-            : "bg-rose-50 text-rose-700"
+            : status === "closed"
+              ? "bg-slate-100 text-slate-700"
+              : "bg-rose-50 text-rose-700"
       }`}
     >
       {t(`labels.${status}`)}
@@ -172,15 +174,24 @@ export function EmployerJobOfferPage() {
         {candidates.length === 0 ? <div className="text-sm text-slate-500">{t("employer.emptyCandidates")}</div> : null}
         <div className="grid gap-3">
           {candidates.map((candidate) => (
-            <div key={candidate.id} className="rounded-2xl bg-slate-50 p-4">
-              <div className="font-semibold text-slate-900">{candidate.seeker.seekerProfile?.fullName ?? candidate.seeker.email}</div>
-              <div className="mt-1 text-sm text-slate-600">
-                {t("labels.email")}: {candidate.seeker.email}
+            <Link
+              key={candidate.id}
+              className="block rounded-2xl bg-slate-50 p-4 transition hover:bg-slate-100"
+              to={`/dashboard/employer/job-offers/${job.id}/candidates/${candidate.id}`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="font-semibold text-slate-900">{candidate.seeker.seekerProfile?.fullName ?? candidate.seeker.email}</div>
+                  <div className="mt-1 text-sm text-slate-600">
+                    {t("labels.email")}: {candidate.seeker.email}
+                  </div>
+                  <div className="mt-1 text-sm text-slate-600">
+                    {t("labels.appliedAt")}: {new Date(candidate.appliedAt).toLocaleDateString("fa-IR")}
+                  </div>
+                </div>
+                <StatusBadge status={candidate.status} />
               </div>
-              <div className="mt-1 text-sm text-slate-600">
-                {t("labels.appliedAt")}: {new Date(candidate.appliedAt).toLocaleDateString("fa-IR")}
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       </SectionCard>

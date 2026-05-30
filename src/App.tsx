@@ -10,6 +10,7 @@ import { AuthCallbackPage } from "./pages/AuthCallbackPage";
 import { LoginPage } from "./pages/LoginPage";
 import { CreateJobOfficePage } from "./pages/CreateJobOfficePage";
 import { EmployerJobOfferPage } from "./pages/EmployerJobOfferPage";
+import { EmployerCandidatePage } from "./pages/EmployerCandidatePage";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
           element={
             <ProtectedRoute roles={["employer"]}>
               <EmployerJobOfferPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/employer/job-offers/:jobId/candidates/:candidateId"
+          element={
+            <ProtectedRoute roles={["employer"]}>
+              <EmployerCandidatePage />
             </ProtectedRoute>
           }
         />

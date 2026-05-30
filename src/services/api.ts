@@ -1,6 +1,7 @@
 import type {
   AuthLoginPayload,
   CreateEmployerJobPayload,
+  EmployerCandidateDetailPayload,
   Job,
   JobCandidatesPayload,
   JobSeekerProfile,
@@ -88,6 +89,17 @@ export const api = {
       body: JSON.stringify(payload)
     }),
   getCandidates: async (jobId: string) => request<JobCandidatesPayload>(`/employer/jobs/${jobId}/candidates`),
+  getEmployerCandidate: async (jobId: string, candidateId: string) =>
+    request<EmployerCandidateDetailPayload>(`/employer/jobs/${jobId}/candidates/${candidateId}`),
+  reviewEmployerCandidate: async (
+    jobId: string,
+    candidateId: string,
+    payload: { decision: "accepted" | "rejected"; rejectionReason?: string }
+  ) =>
+    request<EmployerCandidateDetailPayload>(`/employer/jobs/${jobId}/candidates/${candidateId}/review`, {
+      method: "PATCH",
+      body: JSON.stringify(payload)
+    }),
   deleteEmployerJob: async (jobId: string) =>
     request<null>(`/employer/jobs/${jobId}`, {
       method: "DELETE"

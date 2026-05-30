@@ -1,6 +1,6 @@
 export type Role = "admin" | "job_seeker" | "employer";
 export type JobType = "full-time" | "part-time";
-export type JobStatus = "pending" | "approved" | "rejected";
+export type JobStatus = "pending" | "approved" | "rejected" | "closed";
 export type WorkplaceType = "on_site" | "hybrid" | "remote";
 export type ExperienceLevel = "entry" | "mid" | "senior";
 export type PortugalRegion =
@@ -74,8 +74,13 @@ export type JobSeekerProfile = {
   linkedinUrl?: string;
 };
 
+export type CandidateApplicationStatus = "pending" | "accepted" | "rejected";
+
 export type CandidateApplication = {
   id: string;
+  status: CandidateApplicationStatus;
+  rejectionReason?: string | null;
+  reviewedAt?: string | null;
   appliedAt: string;
   seeker: {
     id: string;
@@ -101,4 +106,9 @@ export type CreateEmployerJobPayload = {
 export type JobCandidatesPayload = {
   job: Job;
   applications: CandidateApplication[];
+};
+
+export type EmployerCandidateDetailPayload = {
+  job: Job;
+  application: CandidateApplication;
 };
