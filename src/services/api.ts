@@ -1,4 +1,5 @@
 import type {
+  AdminOverviewPayload,
   AuthLoginPayload,
   CreateEmployerJobPayload,
   EmployerCandidateDetailPayload,
@@ -178,11 +179,30 @@ export const api = {
     request<null>(`/employer/jobs/${jobId}`, {
       method: "DELETE"
     }),
+  getAdminOverview: async () => request<AdminOverviewPayload>("/admin/overview"),
   getPendingJobs: async () => request<Job[]>("/admin/jobs/pending"),
   updateJobStatus: async (jobId: string, status: Extract<JobStatus, "approved" | "rejected">) =>
     request<Job>(`/admin/jobs/${jobId}/status`, {
       method: "PATCH",
       body: JSON.stringify({ status })
+    }),
+  suspendAdminUser: async (userId: string, suspended: boolean) =>
+    request(`/admin/users/${userId}/suspend`, {
+      method: "PATCH",
+      body: JSON.stringify({ suspended })
+    }),
+  deleteAdminUser: async (userId: string) =>
+    request<null>(`/admin/users/${userId}`, {
+      method: "DELETE"
+    }),
+  suspendAdminJob: async (jobId: string, suspended: boolean) =>
+    request<Job>(`/admin/jobs/${jobId}/suspend`, {
+      method: "PATCH",
+      body: JSON.stringify({ suspended })
+    }),
+  deleteAdminJob: async (jobId: string) =>
+    request<null>(`/admin/jobs/${jobId}`, {
+      method: "DELETE"
     }),
   devLogin: async (role: UserSession["role"]) =>
     request<AuthLoginPayload>("/auth/dev-login", {

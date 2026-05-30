@@ -40,6 +40,7 @@ export type Job = {
   id: string;
   title: string;
   description: string;
+  isSuspended?: boolean;
   companyName?: string | null;
   location?: string | null;
   salaryMin?: number | null;
@@ -116,4 +117,34 @@ export type EmployerCandidateDetailPayload = {
 export type ResumeUploadPayload = {
   url: string;
   fileName: string;
+};
+
+export type AdminEmployerSummary = {
+  id: string;
+  email: string;
+  isSuspended: boolean;
+  createdAt: string;
+  _count?: {
+    employerJobs: number;
+  };
+};
+
+export type AdminJobSeekerSummary = {
+  id: string;
+  email: string;
+  isSuspended: boolean;
+  createdAt: string;
+  seekerProfile?: {
+    fullName?: string;
+    portugalRegion?: PortugalRegion;
+  } | null;
+  _count?: {
+    applications: number;
+  };
+};
+
+export type AdminOverviewPayload = {
+  employers: AdminEmployerSummary[];
+  jobSeekers: AdminJobSeekerSummary[];
+  jobs: Job[];
 };
