@@ -65,7 +65,7 @@ export function AboutPage() {
         <article className="rounded-lg bg-white p-6 shadow hover:shadow-lg transition">
           <h2 className="text-lg font-semibold text-emerald-700">تماس</h2>
           <p className="mt-3 text-slate-700 leading-relaxed">
-            اگر سؤال یا پیشنهادی دارید، با تیم توسعه تماس بگیرید. ما با شما همکاری می‌کنیم.
+            اگر سؤال یا پیشنهادی دارید، با آدرس ایمیل info@karyabi.pt تماس بگیرید. ما با شما همکاری می‌کنیم.
           </p>
         </article>
 
