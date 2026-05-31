@@ -1,8 +1,8 @@
-import type { PropsWithChildren, ReactNode } from "react";
+import type { PropsWithChildren, ReactNode } from 'react'
 
 type SectionCardProps = PropsWithChildren<{
-  title: ReactNode;
-}>;
+  title: ReactNode
+}>
 
 export function SectionCard({ title, children }: SectionCardProps) {
   return (
@@ -10,5 +10,5 @@ export function SectionCard({ title, children }: SectionCardProps) {
       <div className="mb-4 text-xl font-bold text-slate-900">{title}</div>
       {children}
     </section>
-  );
+  )
 }

@@ -1,15 +1,15 @@
-import type { PropsWithChildren } from "react";
-import { useLocation } from "react-router-dom";
+import type { PropsWithChildren } from 'react'
+import { useLocation } from 'react-router-dom'
 
-import { useGDPR } from "../contexts/GDPRContext";
-import { DashboardBackButton } from "./DashboardBackButton";
-import { GdprModal } from "./GdprModal";
-import { NavBar } from "./NavBar";
+import { useGDPR } from '../contexts/GDPRContext'
+import { DashboardBackButton } from './DashboardBackButton'
+import { GdprModal } from './GdprModal'
+import { NavBar } from './NavBar'
 
 export function LayoutWrapper({ children }: PropsWithChildren) {
-  const { hasConsent } = useGDPR();
-  const location = useLocation();
-  const showDashboardBackButton = location.pathname.startsWith("/dashboard/");
+  const { hasConsent } = useGDPR()
+  const location = useLocation()
+  const showDashboardBackButton = location.pathname.startsWith('/dashboard/')
 
   return (
     <div dir="rtl" className="min-h-screen bg-slate-50">
@@ -20,5 +20,5 @@ export function LayoutWrapper({ children }: PropsWithChildren) {
       </main>
       {!hasConsent ? <GdprModal /> : null}
     </div>
-  );
+  )
 }
